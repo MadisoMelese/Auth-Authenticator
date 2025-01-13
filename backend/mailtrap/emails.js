@@ -19,3 +19,16 @@ export const sendVerificationEmail = async(email, verificationToken)=>{
     throw new Error(`Error sending verfication email: ${err}`)
   }
 }
+
+export const sendWelcomeEmail = async (email, name) =>{
+  const recipient = [{email}]
+
+  try{
+    await mailtrapClient.send({
+      from: se
+    })
+  }catch(err){
+    console.log("Error: ", err)
+    throw new Error("Error:", err.message)
+  }
+}
