@@ -24,11 +24,19 @@ export const sendWelcomeEmail = async (email, name) =>{
   const recipient = [{email}]
 
   try{
-    await mailtrapClient.send({
-      from: se
+    const response = await mailtrapClient.send({
+      from: sender,
+      to:recipient,
+      template_uuid: "5ef74961-0bb3-48d8-b642-ea59b7cedcef",
+      template_variables: {
+        "company_info_name": "Madisha Code Lab",
+        "name":name,
+      }
     })
+
+    console.log("Welcome Email sent successfully", response)
   }catch(err){
-    console.log("Error: ", err)
-    throw new Error("Error:", err.message)
+    console.error("Error sending welcome email: ", err);
+    throw new Error(`Error:, ${err}`)
   }
 }

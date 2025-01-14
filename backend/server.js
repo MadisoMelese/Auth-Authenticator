@@ -8,15 +8,6 @@ app.use(express.json())
 app.use('/api/auth', authroutes)
 
 
-
-
-
-
-
-
-
-
-
 app.listen(PORT, ()=>{
   connectDB()
   console.log(`Server is running on port ${PORT}`)
