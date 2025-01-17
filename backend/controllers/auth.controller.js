@@ -1,11 +1,11 @@
-import  { User }  from "../models/user.model.js"
-import bcrypt from 'bcrypt'
-import {generateTokenAndSetCookie} from '../utils/generateTokenAndSetCookie.js'
+import { User } from "../models/user.model.js";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
 import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails.js";
 
-
 // Signup page
-export const signup = async (req, res) => {
+const signup = async (req, res) => {
   const { email, password, name } = req.body;
 
   try {
@@ -14,18 +14,22 @@ export const signup = async (req, res) => {
     }
     const userAlreadyExists = await User.findOne({ email });
     if (userAlreadyExists) {
-      return res.status(400).json({ success: false, message: "User already exists" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = Math.floor(100000 + Math.random() * 9000).toString();
+    const verificationToken = Math.floor(
+      100000 + Math.random() * 9000
+    ).toString();
 
     const user = new User({
       email,
       password: hashedPassword,
       name,
       verificationToken,
-      verificationtokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000 // 24 hours
+      verificationtokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     });
     await user.save();
 
@@ -41,26 +45,25 @@ export const signup = async (req, res) => {
         password: undefined,
       },
     });
-
   } catch (err) {
     res.status(400).json({ success: false, message: "Something went wrong!" });
   }
-}
+};
 
 // Verify Email Page page
-export const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res) => {
   const { code } = req.body;
 
   try {
     const user = await User.findOne({
       verificationToken: code,
-      verificationtokenExpiresAt: { $gt: Date.now() }
+      verificationtokenExpiresAt: { $gt: Date.now() },
     });
 
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Invalid or expired verification code"
+        message: "Invalid or expired verification code",
       });
     }
     user.isVerified = true;
@@ -75,31 +78,96 @@ export const verifyEmail = async (req, res) => {
       message: "User Verified successfully!",
       user: {
         ...user._doc,
-        password: undefined
-      }
+        password: undefined,
+      },
     });
-
   } catch (err) {
     console.log("Error", err);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};
 
 // Login page
-export const login = async (req, res) => {
+const login = async (req, res) => {
   // Implement login functionality
-  res.send("Login functionality not implemented yet");
-}
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "The user doesn't exist!" });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return  res
+        .status(400)
+        .json({
+          success: false,
+          message: "Incorrect Password, pls try again!",
+        });
+    }
+
+    generateTokenAndSetCookie(res, user._id);
+
+    user.lastLogin = new Date();
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Logged in successfully!",
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
+  } catch (err) {
+    console.log("Error in Login", err);
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
 
 // Logout page
-export const logout = (req, res) => {
-  res.clearCookie("token", 
-    { httpOnly: true, 
-      secure:process.env.NODE_ENV === 'production', 
-      samesite: 'strict' 
-    }); 
-  res.status(200).json({ 
-    success: true, 
-    message: "Logged out successfully" 
-  }); 
+const logout = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    samesite: "strict",
+  });
+  res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
 };
+// Forgot password!
+const forgotPassword = async (req, res) =>{
+  const {email} = req.body;
+  try{
+    const user = User.findOne({email})
+    if(!user){
+      return  res.status(400).json({success:false, message: "user not found!, pls make it sure"})
+    }
+
+    const resetToken = crypto.randomBytes(20).toLocaleString("hex")
+    const resetTokenExpiresAt = Date().now + 60 * 60* 1000; //one hour
+
+    user.resetPasswordToken = resetToken; // from models/user.model.js
+    user.resetPasswordExpiresAt = resetTokenExpiresAt; // from models/user.model.js
+
+    await user.save()
+
+
+
+  }catch(err){
+    console.log("Error in forgot password", err)
+    res.status(400).json({
+      success: false, 
+      message: message.err
+    })
+  }
+}
+
+export {forgotPassword, logout, login, verifyEmail, signup}
