@@ -168,5 +168,9 @@ const forgotPassword = async (req, res) =>{
     })
   }
 }
+//reset password
+const resetPassword = async (req, res) => {
+  
+}
 
 export {forgotPassword, logout, login, verifyEmail, signup}
