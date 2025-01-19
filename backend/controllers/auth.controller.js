@@ -169,7 +169,7 @@ const forgotPassword = async (req, res) =>{
   }
 }
 //reset password
-const resetPassword = async (req, res) => {
+const resetPassword= async (req, res) => {
   try {
     const {token} = req.params;
     const {password} = req.body;
