@@ -26,6 +26,8 @@
 
     "bcrypt": "^5.1.1",
 
+    "cookie-parser": "^1.4.7",
+
     "cookies-parser": "^1.2.0",
 
     "crypto": "^1.0.1",

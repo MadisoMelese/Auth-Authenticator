@@ -47,7 +47,7 @@ const sendPasswordResetEmail = async (email, resetURL)=>{
     const response = await mailtrapClient.send({
       from: sender,
       to:recipient,
-      subject: "Reset ypur password",
+      subject: "Reset your password",
       html:PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetURL),
       category: "Password Reset"
 

@@ -1,8 +1,10 @@
 import express from 'express'
+import {signup, login, logout, verifyEmail, forgotPassword, resetPassword, checkAuth} from '../controllers/auth.controller.js'
+import { protectAuth } from '../middleWare/protectAuth.js'
+
 const router = express.Router()
-import {signup, login, logout, verifyEmail, forgotPassword, resetPassword} from '../controllers/auth.controller.js'
 
-
+router.get("/check-auth", protectAuth, checkAuth)
 router.post('/', signup)
 router.post('/login', login)
 router.post('/logout', logout)
