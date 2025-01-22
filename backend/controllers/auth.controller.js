@@ -6,7 +6,7 @@ import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail, sendRe
 
 // Signup page
 const signup = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     if (!email || !password || !name) {
@@ -14,6 +14,7 @@ const signup = async (req, res) => {
     }
     const userAlreadyExists = await User.findOne({ email });
     if (userAlreadyExists) {
+      console.log("User already exists");
       return res
         .status(400)
         .json({ success: false, message: "User already exists" });

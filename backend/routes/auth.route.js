@@ -5,7 +5,7 @@ import { protectAuth } from '../middleWare/protectAuth.js'
 const router = express.Router()
 
 router.get("/check-auth", protectAuth, checkAuth)
-router.post('/signUp', signup)
+router.post('/signup', signup)
 router.post('/login', login)
 router.post('/logout', logout)
 router.post('/verify-email', verifyEmail)

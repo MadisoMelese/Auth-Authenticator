@@ -1,31 +1,37 @@
-import {create} from 'zustand'
-import axios from 'axios'
+import { create } from "zustand";
+import axios from "axios";
 
-axios.defaults.withCredentials = true
-const API_URL = "http://localhost:3000/api/auth"
+const API_URL ="http://localhost:3000/api/auth";
+
+axios.defaults.withCredentials = true;
+
 export const useAuthStore = create((set) => ({
-  user:null,
-  isAuthenticated:false,
-  isLoading:false,
-  isCheckingAuth:true,
-  error:null,
+  user: null,
+  isAuthenticated: false,
+  error: null,
+  isLoading: false,
+  isCheckingAuth: true,
+  message: null,
 
-  signUp: async (name, email, password) => {
-    set({
-      isLoading:true,
-       error:null
-    });
+  signup: async (name, email, password) => {
+    set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/signUp`, {name, email, password})
+      const response = await axios.post(`${API_URL}/signup`, {
+        name,
+        email,
+        password,
+      });
       set({
-        user:response.data.user, 
-        isAuthenticated:true, 
-        isLoading:false
-      })
-    } catch (err) {
-      set({err:err.response.data.message || "Error signing up", isLoading:false})
-      console.log("Error in signUp", err)
-      throw err;
+        user: response.data.user,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response.data.message || "Error signing up",
+        isLoading: false,
+      });
+      throw error;
     }
   },
-}))
+}));

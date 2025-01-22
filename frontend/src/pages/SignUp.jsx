@@ -1,6 +1,5 @@
 import { motion } from "framer-motion"
 import { Lock, Mail, User } from "lucide-react"
-
 import Input from "../components/Input"
 import { useState } from "react"
 import { Link, useNavigate} from "react-router-dom"
@@ -9,19 +8,20 @@ import PasswordStrengthMeter from "../components/PasswordStrengthMeter"
 import { useAuthStore } from "../store/authStore"
 
 const SignUp = () => {
+  const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { signUp } = useAuthStore()
-  const { navigate } = useNavigate()
+  const { signup } = useAuthStore()
+
+
   const handleSignUp = async (e) => {
+
     e.preventDefault()
 
     try {
-      await signUp(name, email, password) 
-      navigate("/verify-email")
-
-    
+      await signup(name, email, password) 
+      navigate("/verify-email")  
     } catch (err) {
       console.log(err)
     }
@@ -45,6 +45,7 @@ const SignUp = () => {
           type="text" 
           placeholder="Full Name" 
           value={name}
+
           onChange={(e) => setName(e.target.value)}
           />
 
@@ -53,16 +54,18 @@ const SignUp = () => {
           type="email" 
           placeholder="Email" 
           value={email}
+          autoComplete="username"
           onChange={(e) => setEmail(e.target.value)}
           />
 
-          <Input 
-          icon={Lock} 
-          type="password" 
-          placeholder="Password" 
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          />
+					<Input
+						icon={Lock}
+						type='password'
+						placeholder='Password'
+						value={password}
+            autoComplete="current-password"
+						onChange={(e) => setPassword(e.target.value)}
+					/>
 
           {/* Password strenght meeter */}
 
