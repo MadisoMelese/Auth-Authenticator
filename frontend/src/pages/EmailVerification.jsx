@@ -1,12 +1,13 @@
-import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
 const EmailVerification = () => {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRefs = useRef([]);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleChange = (index, value) => {
     const newCode = [...code];
@@ -33,27 +34,44 @@ const EmailVerification = () => {
       }
     }
   };
-  const handleKeyDown = (index, e) => {
-    if (e.key === "Backspace" && index > 0) {
-      const newCode = [...code];
-      newCode[index] = "";
-      setCode(newCode);
-      inputRefs.current[index - 1].focus();
-    }
-  };
 
-  const handleSubmit = (e) => {
-    
-    e.preventDefault();
-    const codeString = code.join("");
-    console.log(codeString);
-  };
+	const handleKeyDown = (index, e) => {
+		if (e.key === "Backspace" && !code[index] && index > 0) {
+			inputRefs.current[index - 1].focus();
+			handleChange(index - 1, "");
+			handleChange(index - 1, "");
+		}
+	};
+
+  const handleSubmit =  (e) => {
+		e.preventDefault();
+		const verificationCode = code.join("");
+    console.log(`Verification code is: ${verificationCode}`);
+    // setCode(["", "", "", "", "", ""]);
+
+			// navigate("/");
+
+		// try {
+		// 	await verifyEmail(verificationCode);
+		// 	navigate("/");
+		// 	toast.success("Email verified successfully");
+		// } catch (error) {
+		// 	console.log(error);
+		// }
+	};
+
+  useEffect(() => {
+    if (code.every((digit) => digit !== "")) {
+      handleSubmit(new Event("submit"));    
+    }
+  }, [code]);
   return (
+    <div  className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden">
     <motion.div
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden"
+      className="bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl p-8 w-full max-w-md"
     >
       <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
         Verify Your Email
@@ -66,7 +84,6 @@ const EmailVerification = () => {
         <div className="flex justify-center space-x-4">
           {code.map((digit, index) => (
             <input
-
               key={index}
               ref={(el) => (inputRefs.current[index] = el)}
               type="text"
@@ -78,8 +95,18 @@ const EmailVerification = () => {
             />
           ))}
         </div>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          disabled={isLoading || code.some((digit) => !digit)}
+          className="w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200 disabled:opacity-50">
+            {isLoading ? "Verifying..." : "Verify"}
+          </motion.button>
       </form>
     </motion.div>
+    </div>
+
   );
 };
 
