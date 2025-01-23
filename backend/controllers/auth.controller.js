@@ -10,7 +10,7 @@ const signup = async (req, res) => {
   if (!email || !password || !name) {
     return res
     .status(400)
-    .json({ success: false, message: "All fields are required!" });
+    .json({ success: false, message: "Please fil All fields they are required!" });
   }
   try {
     const userAlreadyExists = await User.findOne({ email });
@@ -48,7 +48,7 @@ const signup = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(400).json({ success: false, message: "Something went wrong!" });
+    res.status(400).json({ success: false, message: err.message});
   }
 };
 
@@ -144,6 +144,7 @@ const logout = async (req, res) => {
     message: "Logged out successfully",
   });
 };
+
 // Forgot password!
 const forgotPassword = async (req, res) =>{
   const {email} = req.body;
@@ -170,6 +171,7 @@ const forgotPassword = async (req, res) =>{
     })
   }
 }
+
 //reset password
 const resetPassword= async (req, res) => {
   try {
@@ -200,7 +202,7 @@ const resetPassword= async (req, res) => {
     res.status(400).json({success: false, message:err.message})
   }
 }
-
+//check auth
 const checkAuth = async (req, res) =>{ 
   try {
     const user = await User.findById(req.userId).select("-password");
