@@ -7,11 +7,12 @@ import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail, sendRe
 // Signup page
 const signup = async (req, res) => {
   const { name, email, password } = req.body;
-
+  if (!email || !password || !name) {
+    return res
+    .status(400)
+    .json({ success: false, message: "All fields are required!" });
+  }
   try {
-    if (!email || !password || !name) {
-      throw new Error("All fields are required!");
-    }
     const userAlreadyExists = await User.findOne({ email });
     if (userAlreadyExists) {
       console.log("User already exists");
