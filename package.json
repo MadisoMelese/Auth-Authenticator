@@ -1,6 +1,6 @@
 {
 
-  "name": "auth",
+  "name": "y",
 
   "version": "1.0.0",
 
@@ -19,8 +19,6 @@
   "license": "ISC",
 
   "type": "module",
-
-  "description": "",
 
   "dependencies": {
 
@@ -50,7 +48,9 @@
 
     "nodemon": "^3.1.9"
 
-  }
+  },
+
+  "description": ""
 
 }
 
