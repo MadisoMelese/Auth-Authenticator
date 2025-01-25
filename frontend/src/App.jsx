@@ -1,10 +1,37 @@
 import Floatingshape from "./components/Floatingshape";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import EmailVerification from "./pages/EmailVerification";
+import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "./store/authStore";
+import { useEffect } from "react";
+
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, user } = useAuthStore();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!user.verified) {
+    return <Navigate to="/verify-email" replace />;
+  }
+  return children;
+};
+const RedirectAuthenticatedUser = ({ children }) => {
+  const { isAuthenticated, user } = useAuthStore();
+  if (isAuthenticated && user.verified) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
 const App = () => {
+  const { checkAuth, isCheckingAuth, isAuthenticated, user } = useAuthStore();
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  console.log("user", user);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-green-900 to-emerald-900 flex items-center justify-center relative overflow-hidden">
       <Floatingshape
@@ -30,11 +57,32 @@ const App = () => {
       />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signUp" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        } />
+
+        <Route
+          path="/signUp"
+          element={
+            <RedirectAuthenticatedUser>
+              <SignUp />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <RedirectAuthenticatedUser>
+              <Login />
+            </RedirectAuthenticatedUser>
+          }
+        />
         <Route path="/verify-email" element={<EmailVerification />} />
       </Routes>
+
+      <Toaster />
     </div>
   );
 };

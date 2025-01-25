@@ -3,8 +3,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const EmailVerification = () => {
+  const [err, setErr] = useState("");
   const navigate = useNavigate();
   const { verifyEmail } = useAuthStore();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
@@ -48,18 +50,18 @@ const EmailVerification = () => {
 
   const handleSubmit = async (e) => {
 		e.preventDefault();
+    setIsLoading(true);
 		const verificationCode = code.join("");
-    console.log(`Verification code is: ${verificationCode}`);
-    setCode(["", "", "", "", "", ""]);
-
-
+    // console.log(`Verification code is: ${verificationCode}`);
 		try {
 			await verifyEmail(verificationCode);
 			navigate("/");
 			toast.success("Email verified successfully");
 		} catch (error) {
-			console.log(error);
+      setIsLoading(false);
+			setErr(error.response.data.message);
 		}
+    setCode(["", "", "", "", "", ""]);
 	};
 
   useEffect(() => {
@@ -68,6 +70,7 @@ const EmailVerification = () => {
     }
   }, [code]);
   return (
+    
     <div  className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden">
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -97,7 +100,7 @@ const EmailVerification = () => {
             />
           ))}
         </div>
-        {}
+        {err && <p className="text-red-500 text-sm text-center">{err}</p>}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

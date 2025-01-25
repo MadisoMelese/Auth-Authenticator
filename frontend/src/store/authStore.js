@@ -55,7 +55,6 @@ export const useAuthStore = create((set) => ({
     }
   },
   
-
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
@@ -77,4 +76,84 @@ export const useAuthStore = create((set) => ({
     }
 
   },
+
+  logout: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      await axios.get(`${API_URL}/logout`);
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response.data.message || "Error logging out",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+  
+  resetPassword: async (email) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axios.post(`${API_URL}/reset-password`, {
+        email,
+      });
+      set({
+        message: response.data.message,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response.data.message || "Error resetting password",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  updatePassword: async (password, token) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axios.put(`${API_URL}/update-password`, {
+        password,
+        token,
+      });
+      set({
+        message: response.data.message,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response.data.message || "Error updating password",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  checkAuth: async () => {
+    set({ 
+      isCheckingAuth: true,
+      err: null, 
+    });
+    try {
+      const response = await axios.get(`${API_URL}/check-auth`);
+      set({
+        user: response.data.user,
+        isAuthenticated: true,
+        isCheckingAuth: false,
+      });
+    } catch (error) {
+      set({
+        isCheckingAuth: false,
+        err: null
+      });
+    }
+  },
+
+
+
 }));
