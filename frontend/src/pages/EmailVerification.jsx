@@ -1,9 +1,12 @@
 import { useEffect, useRef } from "react";
-// import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
 
 const EmailVerification = () => {
+  const navigate = useNavigate();
+  const { verifyEmail } = useAuthStore();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const inputRefs = useRef([]);
@@ -43,21 +46,20 @@ const EmailVerification = () => {
 		}
 	};
 
-  const handleSubmit =  (e) => {
+  const handleSubmit = async (e) => {
 		e.preventDefault();
 		const verificationCode = code.join("");
     console.log(`Verification code is: ${verificationCode}`);
-    // setCode(["", "", "", "", "", ""]);
+    setCode(["", "", "", "", "", ""]);
 
-			// navigate("/");
 
-		// try {
-		// 	await verifyEmail(verificationCode);
-		// 	navigate("/");
-		// 	toast.success("Email verified successfully");
-		// } catch (error) {
-		// 	console.log(error);
-		// }
+		try {
+			await verifyEmail(verificationCode);
+			navigate("/");
+			toast.success("Email verified successfully");
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
   useEffect(() => {
@@ -95,6 +97,7 @@ const EmailVerification = () => {
             />
           ))}
         </div>
+        {}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
