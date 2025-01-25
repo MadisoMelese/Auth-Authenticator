@@ -93,6 +93,11 @@ const verifyEmail = async (req, res) => {
 const login = async (req, res) => {
   // Implement login functionality
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Please fill all fields!" });
+  }
   try {
     const user = await User.findOne({ email });
     if (!user) {
