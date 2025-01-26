@@ -82,14 +82,7 @@ const Login = () => {
         </form>
       </div>
 
-      <div className="px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center">
-        <p className="text-sm text-gray-400">
-          Don&apos;t have an account?{" "}
-          <Link Link to={"/signUp"} className="text-green-400 hover:underline">
-            Sign Up
-          </Link>
-        </p>
-      </div>
+     
     </motion.div>
   );
 };
