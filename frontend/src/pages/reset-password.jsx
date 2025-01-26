@@ -58,15 +58,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <div className="flex items-center mb-6">
-            <Link
-              to={"/forgot-password"}
-              className="text-sm text-green-400 hover:underline"
-            >
-              Forgot Password?
-            </Link>
-          </div>
-          {err && <p className="text-red-500 text-sm mb-4">{err}</p>}
+          
          
         </form>
       </div>
