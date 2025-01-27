@@ -22,13 +22,13 @@ export const useAuthStore = create((set) => ({
         password,
       });
       set({
-        user: response.data.user,
+        user: response?.data?.user,
         isAuthenticated: true,
         isLoading: false,
       });
     } catch (error) {
       set({
-        error: error.response.data.message || "Error signing up",
+        error: error?.response?.data?.message || "Error signing up",
         isLoading: false,
       });
       throw error;
@@ -135,6 +135,7 @@ export const useAuthStore = create((set) => ({
   },
 
   checkAuth: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     set({ 
       isCheckingAuth: true,
       err: null, 

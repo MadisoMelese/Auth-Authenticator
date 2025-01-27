@@ -42,6 +42,7 @@ const Login = () => {
             icon={Mail}
             type="email"
             placeholder="Email"
+            autoComplete="username"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -50,19 +51,21 @@ const Login = () => {
             icon={Lock}
             type="password"
             placeholder="Password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
           <div className="flex items-center mb-6">
             <Link
-              to={"/forgot-password"}
+              to="/forgot-password"
               className="text-sm text-green-400 hover:underline"
             >
-              Forgot Password?
+              Forgot Password
             </Link>
           </div>
-          {err && <p className="text-red-500 text-sm mb-4">{err}</p>}
+          {err && <p className="text-red-500
+           font-semibold mb-4">{err}</p>}
           <motion.button
             className="mt-5 w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200"
             whileHover={{ scale: 1.05 }}
@@ -81,7 +84,7 @@ const Login = () => {
       <div className="px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center">
         <p className="text-sm text-gray-400">
           Don&apos;t have an account?{" "}
-          <Link Link to={"/signUp"} className="text-green-400 hover:underline">
+          <Link to={"/signUp"} className="text-green-400 hover:underline">
             Sign Up
           </Link>
         </p>

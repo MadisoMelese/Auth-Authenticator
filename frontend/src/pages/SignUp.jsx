@@ -37,7 +37,11 @@ const SignUp = () => {
       className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden"
     >
       <div className="p-8">
-        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
+        <h2
+          className="text-3xl font-bold mb-6 text-center bg-gradient-to-r
+         from-green-400 to-emerald-500 text-transparent bg-clip-text
+         "
+        >
           Create Account
         </h2>
         <form onSubmit={handleSignUp}>
@@ -67,7 +71,6 @@ const SignUp = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           {err && <p className="text-red-500 font-semibold mt-2">{err}</p>}
-          
 
           {/* Password strenght meeter */}
 
@@ -77,10 +80,13 @@ const SignUp = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             type="submit"
-
-            disabled={isLoading}  
+            disabled={isLoading}
           >
-            {isLoading ? <Loader className="animate-spin mx-auto" size={24}/> : "Sign Up"}
+            {isLoading ? (
+              <Loader className="animate-spin mx-auto" size={24} />
+            ) : (
+              "Sign Up"
+            )}
           </motion.button>
         </form>
       </div>
