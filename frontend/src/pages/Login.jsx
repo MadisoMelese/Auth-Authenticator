@@ -13,20 +13,18 @@ const Login = () => {
   const [isLloading, setIsLoading] = useState(false);
   const handleLogin = async (e) => {
     e.preventDefault();
-    setErr('')
-    setIsLoading(true);
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    // }, 2000);
+    setErr("")  ;
+
     try {
       await login(email, password);
-      navigate("/");
+      setIsLoading(true);
+        navigate("/");
+      
     } catch (err) {
       console.log(err);
       setErr(err.response.data.message);
       setIsLoading(false);
     }
-
   };
   return (
     <motion.div

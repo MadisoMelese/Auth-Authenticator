@@ -18,10 +18,11 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setErr("");
-
     try {
       await signup(name, email, password);
-      navigate("/verify-email");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (err) {
       console.log(err);
       setErr(err.response.data.message);
