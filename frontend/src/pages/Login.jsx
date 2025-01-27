@@ -15,13 +15,12 @@ const Login = () => {
     e.preventDefault();
     setErr('')
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    // }, 2000);
     try {
       await login(email, password);
       navigate("/");
-
     } catch (err) {
       console.log(err);
       setErr(err.response.data.message);

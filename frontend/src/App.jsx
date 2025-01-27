@@ -8,20 +8,24 @@ import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 
+// PROTECTED ROUTE
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={"/login"} replace />;
   }
-  if (!user.verified) {
-    return <Navigate to="/verify-email" replace />;
+  if (!user.isVerified) {
+    return <Navigate to={"/verify-email"} replace />;
   }
   return children;
 };
+
+
+// REDIRECT AUTHENTICATED USER
 const RedirectAuthenticatedUser = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
-  if (isAuthenticated && user.verified) {
-    return <Navigate to="/" replace />;
+  if (isAuthenticated && user.isVerified) {
+    return <Navigate to={"/"} replace />;
   }
   return children;
 };
@@ -57,11 +61,14 @@ const App = () => {
       />
 
       <Routes>
-        <Route path="/" element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/signUp"
@@ -81,7 +88,6 @@ const App = () => {
         />
         <Route path="/verify-email" element={<EmailVerification />} />
       </Routes>
-
       <Toaster />
     </div>
   );
