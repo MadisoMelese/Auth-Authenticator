@@ -137,6 +137,7 @@ const login = async (req, res) => {
   }
 };
 
+
 // Logout page
 const logout = async (req, res) => {
   res.clearCookie("token", {
