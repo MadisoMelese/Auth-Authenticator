@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const API_URL ="http://localhost:3000/api/auth";
+const API_URL = "http://localhost:3000/api/auth";
 
 axios.defaults.withCredentials = true;
 
@@ -39,7 +39,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axios.post(`${API_URL}/verify-email`, {
-        code
+        code,
       });
       set({
         user: response.data.user,
@@ -54,7 +54,7 @@ export const useAuthStore = create((set) => ({
       throw error;
     }
   },
-  
+
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
@@ -74,7 +74,6 @@ export const useAuthStore = create((set) => ({
       });
       throw error;
     }
-
   },
 
   logout: async () => {
@@ -94,25 +93,8 @@ export const useAuthStore = create((set) => ({
       throw error;
     }
   },
-  
-  resetPassword: async (email) => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await axios.post(`${API_URL}/reset-password`, {
-        email,
-      });
-      set({
-        message: response.data.message,
-        isLoading: false,
-      });
-    } catch (error) {
-      set({
-        error: error.response.data.message || "Error resetting password",
-        isLoading: false,
-      });
-      throw error;
-    }
-  },
+
+
 
   updatePassword: async (password, token) => {
     set({ isLoading: true, error: null });
@@ -136,9 +118,9 @@ export const useAuthStore = create((set) => ({
 
   checkAuth: async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    set({ 
+    set({
       isCheckingAuth: true,
-      err: null, 
+      err: null,
     });
     try {
       const response = await axios.get(`${API_URL}/check-auth`);
@@ -150,11 +132,45 @@ export const useAuthStore = create((set) => ({
     } catch (error) {
       set({
         isCheckingAuth: false,
-        err: null
+        err: null,
       });
     }
   },
 
+  forgotPassword: async (email) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axios.post(`${API_URL}/forgot-password`, {email});
+      set({
+        message: response.data.message,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response.data.message || "Error sending reset link",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
 
+  resetPassword: async (password, token) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axios.post(`${API_URL}/reset-password/${token}`, {
+        password
+      });
+      set({
+        message: response.data.message,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response.data.message || "Error resetting password",
+        isLoading: false,
+      });
+      throw error;
+    }
+  }
 
 }));
