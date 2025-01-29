@@ -15,7 +15,7 @@ const signup = async (req, res) => {
   try {
     const userAlreadyExists = await User.findOne({ email });
     if (userAlreadyExists) {
-      console.log("User already exists");
+      // console.log("User already exists");
       return res
         .status(400)
         .json({ success: false, message: "User already exists" });
@@ -35,7 +35,7 @@ const signup = async (req, res) => {
     });
     await user.save();
 
-    // JWT
+    // json web token (JWT) Generation for every new user
     generateTokenAndSetCookie(res, user._id);
     await sendVerificationEmail(user.email, verificationToken);
 
