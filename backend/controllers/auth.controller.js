@@ -48,7 +48,9 @@ const signup = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(400).json({ success: false, message: err.message});
+    console.log(err.message)
+    res.status(500).json({ success: false, 
+                          message: "Internal server error" });
   }
 };
 
@@ -84,7 +86,7 @@ const verifyEmail = async (req, res) => {
       },
     });
   } catch (err) {
-    console.log("Error", err);
+    // console.log("Error", err);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
